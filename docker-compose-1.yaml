@@ -6,30 +6,82 @@ services:
     depends_on:
     - mongodb
 
-  user: 
+  user:
     build: ./user
     image: venkydevopslearning/user:1.0.0
     container_name: user
     depends_on:
     - redis
     - mongodb
-  
+
+  cart:
+    build: ./cart
+    image: venkydevopslearning/cart:1.0.0
+    container_name: cart
+    depends_on:
+    - redis
+    - catalogue
+
+  shipping:
+    build: ./shipping
+    image: venkydevopslearning/shipping:1.0.0
+    container_name: shipping
+    depends_on:
+    - mysql
+    - cart
+
+  payment:
+    build: ./payment
+    image: venkydevopslearning/payment:1.0.0
+    container_name: payment
+    environment:
+      CART_HOST: "cart"
+      CART_PORT: "8080"
+      USER_HOST: "user"
+      USER_PORT: "8080"
+      AMQP_HOST: "rabbitmq"
+      AMQP_USER: "roboshop"
+      AMQP_PASS: "roboshop123"
+    depends_on:
+    - rabbitmq
+    - cart
+    - user
+
   frontend:
     build: ./frontend
     image: venkydevopslearning/frontend:1.0.0
     container_name: frontend
+    ports:
+    - "80:80"
     depends_on:
     - catalogue
     - user
-    
+    - cart
+    - shipping
+    - payment
+
   mongodb:
     build: ./mongodb #it moves to mongo directory
     image: venkydevopslearning/mongodb:1.0.0 #docker build -t venkydevopslearning/mongodb:1.0.0
     container_name: mongodb
-  
+
   redis:
     image: redis:7.0 #if we are custiomizing the image then only we need to build otherwise we can use image directly
     container_name: redis
+
+  mysql:
+    build: ./mysql
+    image: venkydevopslearning/mysql:1.0.0
+    container_name: mysql
+
+  rabbitmq:
+    image: rabbitmq:3
+    environment:
+      RABBITMQ_DEFAULT_USER: roboshop
+      RABBITMQ_DEFAULT_PASS: roboshop123
+    container_name: rabbitmq
+      #volumes:
+      #- rabbitmq:/var/lib/rabbitmq
 
 networks:
   default:

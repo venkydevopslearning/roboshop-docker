@@ -1,0 +1,38 @@
+services:
+  catalogue:
+    build: ./catalogue
+    image: venkydevopslearning/catalogue:1.0.0
+    container_name: catalogue
+    depends_on:
+    - mongodb
+
+  user: 
+    build: ./user
+    image: venkydevopslearning/user:1.0.0
+    container_name: user
+    depends_on:
+    - redis
+    - mongodb
+  
+  frontend:
+    build: ./frontend
+    image: venkydevopslearning/frontend:1.0.0
+    container_name: frontend
+    depends_on:
+    - catalogue
+    - user
+    
+  mongodb:
+    build: ./mongodb #it moves to mongo directory
+    image: venkydevopslearning/mongodb:1.0.0 #docker build -t venkydevopslearning/mongodb:1.0.0
+    container_name: mongodb
+  
+  redis:
+    image: redis:7.0 #if we are custiomizing the image then only we need to build otherwise we can use image directly
+    container_name: redis
+
+networks:
+  default:
+    driver: bridge
+    name: roboshop
+    external: false #if we specify true, then we need to create network manually

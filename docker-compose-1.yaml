@@ -64,15 +64,21 @@ services:
     build: ./mongodb #it moves to mongo directory
     image: venkydevopslearning/mongodb:1.0.0 #docker build -t venkydevopslearning/mongodb:1.0.0
     container_name: mongodb
+    volumes:    #mongodb we are not sure where it will store data volume lo                                                 cation, mongodb generally store data in /data/db in docker.
+    - mongodb:/data/db
 
   redis:
     image: redis:7.0 #if we are custiomizing the image then only we need to build otherwise we can use image directly
     container_name: redis
+    volumes: 
+    - redis:/data
 
   mysql:
     build: ./mysql
     image: venkydevopslearning/mysql:1.0.0
     container_name: mysql
+    volumes:
+    - mysql:/var/lib/mysql
 
   rabbitmq:
     image: rabbitmq:3
@@ -80,11 +86,20 @@ services:
       RABBITMQ_DEFAULT_USER: roboshop
       RABBITMQ_DEFAULT_PASS: roboshop123
     container_name: rabbitmq
-      #volumes:
-      #- rabbitmq:/var/lib/rabbitmq
+    volumes:
+    - rabbitmq:/var/lib/rabbitmq
 
 networks:
   default:
     driver: bridge
     name: roboshop
     external: false #if we specify true, then we need to create network manually
+
+volumes:
+  mongodb #this is equalent to docker volume create mongodb
+  redis
+  mysql
+  rabbitmq
+
+
+

@@ -1,0 +1,50 @@
+# VCS
+.git
+.gitignore
+
+# Docker
+Dockerfile*
+docker-compose*
+
+# Docs
+README.md
+*.md
+
+# Logs
+*.log
+logs/
+tmp/
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+.vscode
+.idea
+
+# Environment / secrets
+.env
+.env.*
+
+node_modules
+npm-debug.log
+yarn-error.log
+.pnpm-store
+dist
+build
+
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+venv/
+.env/
+.venv/
+
+target/
+build/
+*.jar
+*.war
+*.class
+
+bin/
+pkg/
